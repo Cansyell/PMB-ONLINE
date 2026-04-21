@@ -13,16 +13,6 @@
             <h2 class="text-xl font-semibold text-gray-800">Tambah User Baru</h2>
         </div>
 
-        @if($errors->any())
-            <div class="mx-6 mt-4 p-3 bg-red-50 border border-red-200 text-red-700 text-sm rounded-lg">
-                <ul class="list-disc list-inside space-y-1">
-                    @foreach($errors->all() as $error)
-                        <li>{{ $error }}</li>
-                    @endforeach
-                </ul>
-            </div>
-        @endif
-
         <form method="POST" action="{{ route('admin.users.store') }}" class="p-6 space-y-5">
             @csrf
 

@@ -11,20 +11,11 @@
             <p class="text-sm text-gray-500 mt-1">Perbarui data pendaftaran Anda.</p>
         </div>
 
-        <form method="POST" action="{{ route('mahasiswa.pendaftaran.update') }}" class="p-6" id="form-pendaftaran"enctype="multipart/form-data">
+        <form method="POST" action="{{ route('mahasiswa.pendaftaran.update') }}" class="p-6" id="form-pendaftaran" enctype="multipart/form-data">
             @csrf
             @method('PUT')
 
-            @if($errors->any())
-                <div class="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg">
-                    <p class="text-sm font-medium text-red-700 mb-2">Terdapat kesalahan pengisian:</p>
-                    <ul class="list-disc list-inside text-sm text-red-600 space-y-1">
-                        @foreach($errors->all() as $error)
-                            <li>{{ $error }}</li>
-                        @endforeach
-                    </ul>
-                </div>
-            @endif
+            @include('layouts.partials.wilayah-old-input')
 
             @include('mahasiswa.pendaftaran._form')
 

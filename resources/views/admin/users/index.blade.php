@@ -12,17 +12,6 @@
         </a>
     </div>
 
-    @if(session('success'))
-        <div class="mx-6 mt-4 p-3 bg-green-100 border border-green-300 text-green-800 text-sm rounded-lg">
-            {{ session('success') }}
-        </div>
-    @endif
-    @if(session('error'))
-        <div class="mx-6 mt-4 p-3 bg-red-100 border border-red-300 text-red-800 text-sm rounded-lg">
-            {{ session('error') }}
-        </div>
-    @endif
-
     {{-- Filter & Search --}}
     <div class="px-6 py-3 border-b border-gray-100 flex flex-wrap gap-3">
         <form method="GET" class="flex flex-wrap gap-3 w-full">
@@ -107,13 +96,16 @@
                                     Edit
                                 </a>
                                 @if($user->id !== auth()->id())
-                                    <form method="POST" action="{{ route('admin.users.destroy', $user->id) }}"
-                                          onsubmit="return confirm('Hapus user {{ addslashes($user->name) }}?')">
+                                    <button class="px-3 py-1 text-xs font-medium text-red-700 bg-red-50 border border-red-200 rounded-lg hover:bg-red-100" data-confirm-delete 
+                                            data-title="Hapus user ini?"
+                                            data-text="Data tidak bisa dikembalikan."
+                                            data-form="#form-delete-{{ $user->id }}">
+                                        Hapus
+                                    </button>
+
+                                    <form id="form-delete-{{ $user->id }}" method="POST" 
+                                        action="{{ route('admin.users.destroy', $user->id) }}">
                                         @csrf @method('DELETE')
-                                        <button type="submit"
-                                                class="px-3 py-1 text-xs font-medium text-red-700 bg-red-50 border border-red-200 rounded-lg hover:bg-red-100">
-                                            Hapus
-                                        </button>
                                     </form>
                                 @endif
                             </div>

@@ -10,12 +10,6 @@
         <span class="text-sm text-gray-500">Total: {{ $pendaftarans->total() }} pendaftar</span>
     </div>
 
-    @if(session('success'))
-        <div class="mx-6 mt-4 p-3 bg-green-100 border border-green-300 text-green-800 text-sm rounded-lg">
-            {{ session('success') }}
-        </div>
-    @endif
-
     <div class="overflow-x-auto">
         <table class="w-full text-sm">
             <thead class="bg-gray-50 border-b border-gray-200">

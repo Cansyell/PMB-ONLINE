@@ -81,10 +81,10 @@ class UserController extends Controller
         $user = User::findOrFail($id);
 
         $validated = $request->validate([
-            'name'               => 'required|string|max:255',
-            'email'              => ['required', 'email', Rule::unique('users')->ignore($id)],
-            'role'               => 'required|in:admin,mahasiswa',
-            'password'           => 'nullable|string|min:8|confirmed',
+            'name'     => 'required|string|max:255',
+            'email'    => ['required', 'email', Rule::unique('users')->ignore($id)],
+            'role'     => $user->id === auth()->id() ? 'nullable' : 'required|in:admin,mahasiswa', // ← ubah ini
+            'password' => 'nullable|string|min:8|confirmed',
         ], [
             'name.required'      => 'Nama wajib diisi.',
             'email.required'     => 'Email wajib diisi.',
@@ -93,22 +93,20 @@ class UserController extends Controller
             'password.confirmed' => 'Konfirmasi password tidak cocok.',
         ]);
 
-        // Hanya update password jika diisi
         if (!empty($validated['password'])) {
             $validated['password'] = Hash::make($validated['password']);
         } else {
             unset($validated['password']);
         }
 
-        // Cegah admin mengubah role dirinya sendiri
         if ($user->id === auth()->id()) {
-            unset($validated['role']);
+            unset($validated['role']); // tetap dipertahankan sebagai safeguard
         }
 
         $user->update($validated);
 
         return redirect()->route('admin.users.show', $id)
-                         ->with('success', 'Data user berhasil diperbarui.');
+                        ->with('success', 'Data user berhasil diperbarui.');
     }
 
     public function destroy($id)

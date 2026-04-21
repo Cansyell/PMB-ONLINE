@@ -4,18 +4,7 @@
 
 @section('content')
 <div class="max-w-4xl mx-auto">
-
-    @if(session('success'))
-        <div class="mb-4 p-4 bg-green-100 border border-green-300 text-green-800 rounded-lg">
-            {{ session('success') }}
-        </div>
-    @endif
-    @if(session('info'))
-        <div class="mb-4 p-4 bg-blue-100 border border-blue-300 text-blue-800 rounded-lg">
-            {{ session('info') }}
-        </div>
-    @endif
-
+    
     <div class="bg-white rounded-lg shadow p-6">
         <h2 class="text-xl font-semibold text-gray-800 mb-6">Status Pendaftaran Saya</h2>
 
@@ -33,8 +22,8 @@
         @else
             <div class="col-span-2 flex justify-end gap-3 mb-4">
                 <a href="{{ route('mahasiswa.pendaftaran.cetak-pdf') }}"
-                target="_blank"
-                class="inline-flex items-center gap-2 px-4 py-2 bg-white border border-gray-300 text-gray-700 text-sm font-medium rounded-lg hover:bg-gray-50">
+                   target="_blank"
+                   class="inline-flex items-center gap-2 px-4 py-2 bg-white border border-gray-300 text-gray-700 text-sm font-medium rounded-lg hover:bg-gray-50">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/>
@@ -42,7 +31,7 @@
                     Cetak Bukti
                 </a>
                 <a href="{{ route('mahasiswa.pendaftaran.edit') }}"
-                class="px-4 py-2 bg-indigo-600 text-white text-sm font-medium rounded-lg hover:bg-indigo-700">
+                   class="px-4 py-2 bg-indigo-600 text-white text-sm font-medium rounded-lg hover:bg-indigo-700">
                     Edit Data
                 </a>
             </div>
@@ -82,14 +71,14 @@
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
                     @php
                         $lahir = [
-                            'Tempat Lahir'       => $pendaftaran->lahir_luar_negeri
+                            'Tempat Lahir'         => $pendaftaran->lahir_luar_negeri
                                                         ? '(Luar Negeri) ' . ($pendaftaran->tempat_lahir ?? '-')
                                                         : $pendaftaran->tempat_lahir,
-                            'Tanggal Lahir'      => $pendaftaran->tanggal_lahir?->format('d/m/Y'),
+                            'Tanggal Lahir'        => $pendaftaran->tanggal_lahir?->format('d/m/Y'),
                             'Lahir di Luar Negeri' => $pendaftaran->lahir_luar_negeri ? 'Ya' : 'Tidak',
-                            'Negara Lahir'       => $pendaftaran->lahir_luar_negeri ? ($pendaftaran->negara_lahir ?? '-') : '-',
-                            'Provinsi Lahir'     => $pendaftaran->provinceLahir?->name ?? '-',
-                            'Kota Lahir'         => $pendaftaran->cityLahir?->name ?? '-',
+                            'Negara Lahir'         => $pendaftaran->lahir_luar_negeri ? ($pendaftaran->negara_lahir ?? '-') : '-',
+                            'Provinsi Lahir'       => $pendaftaran->provinceLahir?->name ?? '-',
+                            'Kota Lahir'           => $pendaftaran->cityLahir?->name ?? '-',
                         ];
                     @endphp
                     @foreach($lahir as $label => $value)
@@ -161,7 +150,6 @@
                     Berkas & Media
                 </h3>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
-                    {{-- Foto --}}
                     <div class="bg-gray-50 rounded p-3">
                         <p class="text-gray-500 text-xs mb-1">Foto</p>
                         @if($pendaftaran->foto)
@@ -172,8 +160,6 @@
                             <p class="text-gray-800 font-medium">-</p>
                         @endif
                     </div>
-
-                    {{-- Video Perkenalan --}}
                     <div class="bg-gray-50 rounded p-3">
                         <p class="text-gray-500 text-xs mb-1">Video Perkenalan</p>
                         @if($pendaftaran->video_perkenalan)

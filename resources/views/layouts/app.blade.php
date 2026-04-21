@@ -5,9 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@yield('title') - Dashboard</title>
     <script src="https://cdn.tailwindcss.com"></script>
-        {{-- Tom Select --}}
+    {{-- Tom Select --}}
     <link href="https://cdn.jsdelivr.net/npm/tom-select@2.3.1/dist/css/tom-select.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/tom-select@2.3.1/dist/js/tom-select.complete.min.js"></script>
+    {{-- SweetAlert2 + helper global --}}
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="{{ asset('js/sweetalert.js') }}"></script>
+    <script src="{{ asset('js/form-handler.js') }}"></script>
 
     <style>
         .ts-wrapper.single .ts-control {
@@ -42,21 +46,26 @@
     </style>
 </head>
 <body class="bg-gray-100">
-    <div class="flex h-screen overflow-hidden">
-    @include('layouts.partials.sidebar')
+    <div class="flex min-h-screen overflow-hidden">
+        @include('layouts.partials.sidebar')
 
-    <div class="flex-1 flex flex-col overflow-hidden min-h-0">
-        @include('layouts.partials.navbar')
+        <div class="flex-1 flex flex-col overflow-hidden min-h-0">
+            @include('layouts.partials.navbar')
 
-        <main class="flex-1 overflow-y-auto p-6 min-h-0">
-            @yield('content')
-        </main>
+            <main class="flex-1 overflow-y-auto p-6 min-h-0">
+                @yield('content')
+            </main>
+        </div>
     </div>
-</div>
-@stack('scripts')
+
+    {{-- Script halaman spesifik (form, dsb.) --}}
+    @stack('scripts')
+
+    {{-- Session flash: HARUS setelah @stack('scripts') dan sweetalert.js
+         agar SwalHelper sudah tersedia saat script ini dijalankan --}}
+    @include('layouts.partials.session-flash')
 
     <script>
-        // Toggle sidebar
         function toggleSidebar() {
             const sidebar = document.getElementById('sidebar');
             const overlay = document.getElementById('sidebar-overlay');
@@ -64,7 +73,6 @@
             overlay.classList.toggle('hidden');
         }
 
-        // Close sidebar when clicking overlay
         document.getElementById('sidebar-overlay')?.addEventListener('click', toggleSidebar);
     </script>
 </body>

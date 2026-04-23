@@ -82,9 +82,8 @@
     @error('agama_id') <p class="mt-1 text-xs text-red-600">{{ $message }}</p> @enderror
 </div>
 
-{{-- ═══════════════════════════════════════════════════════════════ --}}
-{{-- DATA KELAHIRAN                                                  --}}
-{{-- ═══════════════════════════════════════════════════════════════ --}}
+
+{{-- DATA KELAHIRAN--}}
 <h3 class="text-sm font-semibold text-gray-500 uppercase tracking-wider border-b pb-2 mb-4 mt-8">
     Data Kelahiran
 </h3>
@@ -174,9 +173,8 @@
     </div>
 </div>
 
-{{-- ═══════════════════════════════════════════════════════════════ --}}
-{{-- ALAMAT KTP                                                      --}}
-{{-- ═══════════════════════════════════════════════════════════════ --}}
+
+{{-- ALAMAT KTP--}}
 <h3 class="text-sm font-semibold text-gray-500 uppercase tracking-wider border-b pb-2 mb-4 mt-8">
     Alamat KTP
 </h3>
@@ -255,9 +253,8 @@
     </div>
 </div>
 
-{{-- ═══════════════════════════════════════════════════════════════ --}}
-{{-- ALAMAT SAAT INI                                                 --}}
-{{-- ═══════════════════════════════════════════════════════════════ --}}
+
+{{-- ALAMAT SAAT INI--}}
 <h3 class="text-sm font-semibold text-gray-500 uppercase tracking-wider border-b pb-2 mb-4 mt-8">
     Alamat Saat Ini
 </h3>
@@ -350,9 +347,8 @@
     </div>
 </div>
 
-{{-- ═══════════════════════════════════════════════════════════════ --}}
-{{-- KONTAK                                                          --}}
-{{-- ═══════════════════════════════════════════════════════════════ --}}
+
+{{-- KONTAK--}}
 <h3 class="text-sm font-semibold text-gray-500 uppercase tracking-wider border-b pb-2 mb-4 mt-8">
     Kontak
 </h3>
@@ -392,9 +388,8 @@
         @error('no_hp') <p class="mt-1 text-xs text-red-600">{{ $message }}</p> @enderror
     </div>
 </div>
-{{-- ═══════════════════════════════════════════════════════════════ --}}
-{{-- FOTO & VIDEO                                                    --}}
-{{-- ═══════════════════════════════════════════════════════════════ --}}
+
+{{-- FOTO & VIDEO--}}
 <h3 class="text-sm font-semibold text-gray-500 uppercase tracking-wider border-b pb-2 mb-4 mt-8">
     Foto & Video Perkenalan
 </h3>

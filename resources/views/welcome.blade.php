@@ -319,7 +319,7 @@
         <div class="nav-links">
             <a href="#jalur">Jalur Masuk</a>
             <a href="#jadwal">Jadwal</a>
-            <a href="#faq">FAQ</a>
+            {{-- <a href="#faq">FAQ</a> --}}
             @if (Route::has('login'))
                 @auth
                     <a href="{{ url('/dashboard') }}" class="nav-btn">Dashboard</a>

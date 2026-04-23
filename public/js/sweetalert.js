@@ -1,29 +1,13 @@
-/**
- * SwalHelper — Global SweetAlert2 Helper
- * ----------------------------------------
- * Semua popup tampil di tengah layar.
- * Sertakan file ini SETELAH cdn sweetalert2 di layout utama.
- *
- * Cara pakai:
- *   SwalHelper.success('Berhasil!', 'Data disimpan.');
- *   SwalHelper.confirmDelete('Hapus?', 'Tidak bisa dikembalikan.', () => form.submit());
- *   SwalHelper.loading('Memproses...');
- *   SwalHelper.handleError(error);   // otomatis parse fetch/axios error
- */
 
 const SwalHelper = (() => {
 
-    /* ------------------------------------------------------------------ */
-    /*  Konfigurasi tema                                                    */
-    /* ------------------------------------------------------------------ */
+    // Konfigurasi tema                                                    
+    const BRAND  = '#4f46e5';   
+    const DANGER = '#ef4444';   
+    const GRAY   = '#6b7280';   
 
-    const BRAND  = '#4f46e5';   // indigo — sesuaikan dengan palette proyek
-    const DANGER = '#ef4444';   // merah untuk aksi destruktif
-    const GRAY   = '#6b7280';   // abu untuk tombol batal
-
-    /** Base config: semua popup di tengah, tombol konsisten */
     const DEFAULTS = {
-        position:           'center',   // selalu tengah
+        position:           'center',   
         confirmButtonColor: BRAND,
         cancelButtonColor:  GRAY,
         buttonsStyling:     true,
@@ -32,23 +16,12 @@ const SwalHelper = (() => {
         scrollbarPadding:   false,
     };
 
-    /* ------------------------------------------------------------------ */
-    /*  Core                                                                */
-    /* ------------------------------------------------------------------ */
-
-    /**
-     * Wrapper utama — merge DEFAULTS lalu panggil Swal.fire().
-     * @param {object} options
-     * @returns {Promise}
-     */
+    //  Core                                                                
     function fire(options) {
         return Swal.fire({ ...DEFAULTS, ...options });
     }
 
-    /* ------------------------------------------------------------------ */
-    /*  Notifikasi sederhana (modal di tengah)                             */
-    /* ------------------------------------------------------------------ */
-
+    // Notifikasi sederhana (modal di tengah)                            
     function success(title, text = '') {
         return fire({ icon: 'success', title, text });
     }
@@ -65,15 +38,8 @@ const SwalHelper = (() => {
         return fire({ icon: 'info', title, text });
     }
 
-    /* ------------------------------------------------------------------ */
-    /*  Toast — pojok kanan atas (non-blocking)                            */
-    /* ------------------------------------------------------------------ */
-
-    /**
-     * @param {'success'|'error'|'warning'|'info'} icon
-     * @param {string} title
-     * @param {number} [timer=3000]
-     */
+    
+    // Toast — pojok kanan atas (non-blocking)                            
     function toast(icon, title, timer = 3000) {
         return Swal.fire({
             toast:             true,
@@ -90,18 +56,8 @@ const SwalHelper = (() => {
         });
     }
 
-    /* ------------------------------------------------------------------ */
-    /*  Konfirmasi umum                                                     */
-    /* ------------------------------------------------------------------ */
-
-    /**
-     * Dialog konfirmasi dengan callback.
-     * @param {string}   title
-     * @param {string}   text
-     * @param {Function} onConfirm   — dipanggil jika user klik "Ya"
-     * @param {Function} [onCancel]  — dipanggil jika user klik "Batal" (opsional)
-     * @param {object}   [options]   — override opsional
-     */
+    
+    //  Konfirmasi umum                                                     
     function confirm(title, text, onConfirm, onCancel = null, options = {}) {
         return fire({
             icon:              'question',
@@ -121,17 +77,8 @@ const SwalHelper = (() => {
         });
     }
 
-    /* ------------------------------------------------------------------ */
-    /*  Konfirmasi hapus                                                    */
-    /* ------------------------------------------------------------------ */
-
-    /**
-     * Dialog konfirmasi khusus delete (tombol merah).
-     * @param {string}   title
-     * @param {string}   text
-     * @param {Function} onConfirm
-     * @param {object}   [options]
-     */
+    
+    //  Konfirmasi hapus                                                    
     function confirmDelete(
         title     = 'Hapus data ini?',
         text      = 'Data tidak bisa dikembalikan setelah dihapus.',
@@ -155,15 +102,9 @@ const SwalHelper = (() => {
         });
     }
 
-    /* ------------------------------------------------------------------ */
-    /*  Loading — non-dismissable saat proses berjalan                      */
-    /* ------------------------------------------------------------------ */
-
-    /**
-     * Tampilkan popup loading. Tutup dengan Swal.close() atau SwalHelper.close().
-     * @param {string} title
-     * @param {string} text
-     */
+    
+    // Loading — non-dismissable saat proses berjalan                      
+    
     function loading(title = 'Memproses...', text = 'Mohon tunggu sebentar.') {
         return Swal.fire({
             ...DEFAULTS,
@@ -176,47 +117,29 @@ const SwalHelper = (() => {
         });
     }
 
-    /** Tutup popup yang sedang terbuka */
+    // Tutup popup yang sedang terbuka 
     function close() {
         Swal.close();
     }
 
-    /* ------------------------------------------------------------------ */
-    /*  Error handler — otomatis parse berbagai jenis error                */
-    /* ------------------------------------------------------------------ */
-
-    /**
-     * Tangani error dari fetch / axios / Laravel validation secara otomatis.
-     *
-     * Kasus yang didukung:
-     *   • Laravel 422 validation  → tampilkan list error per field
-     *   • Laravel 403 / 401       → pesan akses ditolak / sesi habis
-     *   • Laravel 404             → data tidak ditemukan
-     *   • Laravel 500             → kesalahan server
-     *   • Fetch / network error   → koneksi bermasalah
-     *   • Axios error             → otomatis dibaca dari response.data
-     *   • String / Error object   → ditampilkan langsung
-     *
-     * @param {any}    err               — error apapun (Response, AxiosError, Error, string)
-     * @param {string} [fallbackTitle]   — judul fallback jika tidak terdeteksi
-     * @param {string} [fallbackText]    — teks fallback
-     */
+    
+    // Error handler               
     async function handleError(
         err,
         fallbackTitle = 'Terjadi Kesalahan',
         fallbackText  = 'Silakan coba lagi atau hubungi administrator.'
     ) {
-        // --- 1. String langsung ---
+        // String langsung 
         if (typeof err === 'string') {
             return error(fallbackTitle, err);
         }
 
-        // --- 2. Native fetch Response ---
+        // Native fetch Response 
         if (err instanceof Response) {
             return _handleHttpResponse(err, fallbackTitle, fallbackText);
         }
 
-        // --- 3. Axios error ---
+        // Axios error 
         if (err && err.response) {
             return _handleHttpStatus(
                 err.response.status,
@@ -226,7 +149,7 @@ const SwalHelper = (() => {
             );
         }
 
-        // --- 4. Network / koneksi mati ---
+        // Network / koneksi mati 
         if (err instanceof TypeError && err.message.includes('fetch')) {
             return error(
                 'Koneksi Bermasalah',
@@ -234,27 +157,27 @@ const SwalHelper = (() => {
             );
         }
 
-        // --- 5. Error object biasa ---
+        // Error object biasa 
         if (err instanceof Error) {
             return error(fallbackTitle, err.message || fallbackText);
         }
 
-        // --- 6. Fallback ---
+        // Fallback 
         return error(fallbackTitle, fallbackText);
     }
 
-    /** Parse native fetch Response */
+    // Parse native fetch Response 
     async function _handleHttpResponse(response, fallbackTitle, fallbackText) {
         let data = null;
         try {
             const ct = response.headers.get('content-type') || '';
             data = ct.includes('application/json') ? await response.json() : null;
-        } catch (_) { /* biarkan data null */ }
+        } catch (_) { }
 
         return _handleHttpStatus(response.status, data, fallbackTitle, fallbackText);
     }
 
-    /** Routing berdasarkan HTTP status */
+    // Routing berdasarkan HTTP status 
     function _handleHttpStatus(status, data, fallbackTitle, fallbackText) {
         switch (status) {
             case 401:
@@ -300,7 +223,7 @@ const SwalHelper = (() => {
         }
     }
 
-    /** Tampilkan Laravel 422 validation errors sebagai list */
+    // Tampilkan Laravel 422 validation errors sebagai list 
     function _handleValidationErrors(data) {
         if (!data || !data.errors) {
             return error(
@@ -322,33 +245,8 @@ const SwalHelper = (() => {
         });
     }
 
-    /* ------------------------------------------------------------------ */
-    /*  Wrapper fetch — loading + error handling otomatis                  */
-    /* ------------------------------------------------------------------ */
-
-    /**
-     * Fetch dengan loading popup otomatis + error handling.
-     * Jika sukses, tutup loading dan kembalikan data JSON.
-     * Jika gagal, tutup loading dan tampilkan error via handleError().
-     *
-     * @param {string}  url
-     * @param {object}  [fetchOptions]       — opsi fetch (method, body, headers, dsb.)
-     * @param {object}  [uiOptions]
-     * @param {string}  [uiOptions.loadingTitle]
-     * @param {string}  [uiOptions.loadingText]
-     * @param {boolean} [uiOptions.showSuccessToast]  — default true
-     * @param {string}  [uiOptions.successMessage]
-     * @returns {Promise<any|null>}  — data JSON jika sukses, null jika gagal
-     *
-     * Contoh:
-     *   const data = await SwalHelper.fetchWithLoading('/api/simpan', {
-     *       method: 'POST',
-     *       headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': csrfToken() },
-     *       body: JSON.stringify(payload),
-     *   }, { successMessage: 'Data berhasil disimpan!' });
-     *
-     *   if (data) { // lanjutkan logika }
-     */
+    
+    // Wrapper fetch — loading + error handling otomatis                  
     async function fetchWithLoading(url, fetchOptions = {}, uiOptions = {}) {
         const {
             loadingTitle      = 'Memproses...',
@@ -383,23 +281,14 @@ const SwalHelper = (() => {
         }
     }
 
-    /* ------------------------------------------------------------------ */
-    /*  Utility                                                             */
-    /* ------------------------------------------------------------------ */
-
-    /**
-     * Ambil CSRF token dari meta tag Laravel.
-     * Berguna saat pakai fetchWithLoading.
-     * @returns {string}
-     */
+    
+    // Utility                                                             
     function csrfToken() {
         return document.querySelector('meta[name="csrf-token"]')?.content ?? '';
     }
 
-    /* ------------------------------------------------------------------ */
-    /*  Public API                                                          */
-    /* ------------------------------------------------------------------ */
-
+    
+    // Public API                                                          
     return {
         fire,
         success,

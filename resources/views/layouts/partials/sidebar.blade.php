@@ -72,9 +72,8 @@
             </a>
 
         @else
-        {{-- ══════════════════════════════════════════ --}}
+        
         {{-- MENU MAHASISWA                             --}}
-        {{-- ══════════════════════════════════════════ --}}
 
             <p class="px-6 mb-2 text-xs font-semibold text-gray-500 uppercase tracking-wider">Menu</p>
 

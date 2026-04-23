@@ -7,18 +7,13 @@ use Illuminate\Http\JsonResponse;
 
 class MonitoringController extends Controller
 {
-    /**
-     * Tampilkan halaman monitoring.
-     */
+    // halaman monitoring
+    
     public function index()
     {
         return view('admin.monitoring.index');
     }
 
-    /**
-     * Endpoint AJAX: kembalikan semua metrik sekaligus.
-     * Didesain seringan mungkin — satu request, satu response.
-     */
     public function metrics(): JsonResponse
     {
         return response()->json([
@@ -31,18 +26,13 @@ class MonitoringController extends Controller
         ]);
     }
 
-    // ─────────────────────────────────────────────
-    // Private helpers — setiap helper semaksimal
-    // mungkin menghindari proses berat.
-    // ─────────────────────────────────────────────
-
     private function getCpu(): array
     {
         $usage = 0;
         $cores = 1;
 
         if (PHP_OS_FAMILY === 'Linux') {
-            // Baca /proc/stat dua kali dengan jeda sangat singkat (50ms)
+            // Baca 
             $s1 = $this->readProcStat();
             usleep(50000); // 50 ms
             $s2 = $this->readProcStat();
@@ -69,7 +59,7 @@ class MonitoringController extends Controller
             $cores = (int) shell_exec('echo %NUMBER_OF_PROCESSORS%') ?: 1;
         }
 
-        // Load average (Linux/Mac only)
+        // Load average 
         $load = [0, 0, 0];
         if (function_exists('sys_getloadavg')) {
             $la   = sys_getloadavg();
@@ -90,7 +80,7 @@ class MonitoringController extends Controller
     private function readProcStat(): array
     {
         $line = explode(' ', trim(shell_exec("head -1 /proc/stat 2>/dev/null") ?? ''));
-        array_shift($line); // buang 'cpu'
+        array_shift($line); 
         return array_map('intval', $line);
     }
 
@@ -176,7 +166,7 @@ class MonitoringController extends Controller
                     $iface = $m[1];
                     $rx   += (int)$m[2];
                     $tx   += (int)$m[3];
-                    break; // ambil interface pertama saja
+                    break; 
                 }
             }
         }
@@ -192,7 +182,7 @@ class MonitoringController extends Controller
 
     private function getGpu(): array
     {
-        // Coba nvidia-smi terlebih dahulu (sangat ringan)
+
         $out = shell_exec('nvidia-smi --query-gpu=name,utilization.gpu,memory.used,memory.total,temperature.gpu --format=csv,noheader,nounits 2>/dev/null');
 
         if ($out && trim($out) !== '') {

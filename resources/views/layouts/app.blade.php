@@ -61,8 +61,7 @@
     {{-- Script halaman spesifik (form, dsb.) --}}
     @stack('scripts')
 
-    {{-- Session flash: HARUS setelah @stack('scripts') dan sweetalert.js
-         agar SwalHelper sudah tersedia saat script ini dijalankan --}}
+    {{-- Session flash --}}
     @include('layouts.partials.session-flash')
 
     <script>

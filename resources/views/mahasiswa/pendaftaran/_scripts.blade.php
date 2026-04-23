@@ -1,7 +1,4 @@
 <script>
-// ─────────────────────────────────────────────────────────────────────────────
-// Pastikan sweetalert.js sudah di-load sebelum script ini.
-// ─────────────────────────────────────────────────────────────────────────────
 
 const API = {
     cities:    '{{ route("api.wilayah.cities",    ":code") }}',
@@ -34,15 +31,6 @@ function resetTS(id, placeholder) {
     TS[id].disable();
 }
 
-/**
- * Fetch opsi wilayah, isi TomSelect, enable, set value (silent), lalu callback.
- * @param {string}      url
- * @param {string}      code         — kode parent (province/city/district)
- * @param {string}      id           — id TomSelect target
- * @param {string}      placeholder
- * @param {string|null} selectValue  — value yang akan dipilih setelah load
- * @param {Function|null} callback   — dipanggil setelah value di-set
- */
 function fetchAndPopulateTS(url, code, id, placeholder, selectValue, callback) {
     if (!TS[id]) return;
     TS[id].clear(true);
@@ -67,10 +55,6 @@ function fetchAndPopulateTS(url, code, id, placeholder, selectValue, callback) {
         });
 }
 
-/**
- * Baca old value dari hidden input yang di-render Blade.
- * Pola id: "old_{name}" — lihat wilayah-old-inputs.blade.php
- */
 function oldVal(name) {
     const el = document.getElementById('old_' + name);
     return el ? el.value : '';
@@ -78,38 +62,23 @@ function oldVal(name) {
 
 document.addEventListener('DOMContentLoaded', function () {
 
-    // ── Province: tidak di-disable, options sudah di-render Blade ─────────
-    // TomSelect hanya menjadi wrapper; nilai terpilih (old/saved) sudah ada
-    // sebagai <option selected> dari Blade, jadi tidak perlu setValue.
+    // sebagai <option selected> dari Blade.
     initTS('province_code_lahir',    '-- Pilih Provinsi --',    false);
     initTS('province_code',          '-- Pilih Provinsi --',    false);
     initTS('province_code_sekarang', '-- Pilih Provinsi --',    false);
 
-    // ── Level 2 — disabled sampai province dipilih ────────────────────────
+    // disabled sampai province dipilih 
     initTS('city_code_lahir',    '-- Pilih Provinsi dulu --');
     initTS('city_code',          '-- Pilih Provinsi dulu --');
     initTS('city_code_sekarang', '-- Pilih Provinsi dulu --');
 
-    // ── Level 3 ───────────────────────────────────────────────────────────
     initTS('district_code',          '-- Pilih Kota dulu --');
     initTS('district_code_sekarang', '-- Pilih Kota dulu --');
 
-    // ── Level 4 ───────────────────────────────────────────────────────────
     initTS('village_code',          '-- Pilih Kecamatan dulu --');
     initTS('village_code_sekarang', '-- Pilih Kecamatan dulu --');
 
-    // ─────────────────────────────────────────────────────────────────────
-    // Repopulate chain berdasarkan nilai yang sudah ada.
-    //
-    // Sumber nilai (prioritas):
-    //   1. old() dari session flash  → hidden input #old_{name} (via Blade)
-    //   2. Nilai dari model          → hidden input #old_{name} (via Blade)
-    //
-    // Province sudah terpilih otomatis oleh Blade (<option selected>),
-    // kita hanya perlu baca nilainya dan fetch level di bawahnya.
-    // ─────────────────────────────────────────────────────────────────────
-
-    // ── KTP ───────────────────────────────────────────────────────────────
+    // KTP 
     const provKtp = TS['province_code']?.getValue();
     const cityKtp = oldVal('city_code');
     const distKtp = oldVal('district_code');
@@ -125,7 +94,7 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    // ── Lahir ─────────────────────────────────────────────────────────────
+    // Lahir 
     const luarNegeriChecked = document.getElementById('lahir_luar_negeri').checked;
     const provLahir = TS['province_code_lahir']?.getValue();
     const cityLahir = oldVal('city_code_lahir');
@@ -134,7 +103,7 @@ document.addEventListener('DOMContentLoaded', function () {
         fetchAndPopulateTS(API.cities, provLahir, 'city_code_lahir', '-- Pilih Kota/Kabupaten --', cityLahir, null);
     }
 
-    // ── Sekarang ──────────────────────────────────────────────────────────
+    // Sekarang 
     const provNow = TS['province_code_sekarang']?.getValue();
     const cityNow = oldVal('city_code_sekarang');
     const distNow = oldVal('district_code_sekarang');
@@ -151,7 +120,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 });
 
-// ── Chaining KTP ──────────────────────────────────────────────────────────
+// Chaining KTP 
 document.getElementById('province_code').addEventListener('change', function () {
     resetTS('city_code',     '-- Pilih Kota/Kabupaten --');
     resetTS('district_code', '-- Pilih Kota dulu --');
@@ -173,14 +142,14 @@ document.getElementById('district_code').addEventListener('change', function () 
     fetchAndPopulateTS(API.villages, this.value, 'village_code', '-- Pilih Kelurahan/Desa --', null, null);
 });
 
-// ── Chaining Lahir ────────────────────────────────────────────────────────
+// Chaining Lahir 
 document.getElementById('province_code_lahir').addEventListener('change', function () {
     resetTS('city_code_lahir', '-- Pilih Kota/Kabupaten --');
     if (!this.value) return;
     fetchAndPopulateTS(API.cities, this.value, 'city_code_lahir', '-- Pilih Kota/Kabupaten --', null, null);
 });
 
-// ── Chaining Sekarang ─────────────────────────────────────────────────────
+// Chaining Sekarang 
 document.getElementById('province_code_sekarang').addEventListener('change', function () {
     resetTS('city_code_sekarang',     '-- Pilih Kota/Kabupaten --');
     resetTS('district_code_sekarang', '-- Pilih Kota dulu --');
@@ -202,7 +171,7 @@ document.getElementById('district_code_sekarang').addEventListener('change', fun
     fetchAndPopulateTS(API.villages, this.value, 'village_code_sekarang', '-- Pilih Kelurahan/Desa --', null, null);
 });
 
-// ── Toggle Lahir Luar Negeri ──────────────────────────────────────────────
+// Toggle Lahir Luar Negeri 
 const checkLuarNegeri     = document.getElementById('lahir_luar_negeri');
 const sectionWilayahLahir = document.getElementById('section-wilayah-lahir');
 const sectionNegaraLahir  = document.getElementById('section-negara-lahir');
@@ -226,11 +195,10 @@ function toggleLahirLuarNegeri() {
 }
 
 checkLuarNegeri.addEventListener('change', toggleLahirLuarNegeri);
-// Jalankan SETELAH DOMContentLoaded selesai agar repopulate lahir tidak
-// dikacaukan oleh toggle yang me-disable province_code_lahir.
-// (toggleLahirLuarNegeri dipanggil di akhir DOMContentLoaded — lihat bawah)
 
-// ── Checkbox "Sama dengan KTP" ────────────────────────────────────────────
+// (toggleLahirLuarNegeri dipanggil di akhir DOMContentLoaded 
+
+// Checkbox "Sama dengan KTP" 
 const checkSame  = document.getElementById('same_as_ktp');
 const sectionNow = document.getElementById('section-alamat-sekarang');
 
@@ -246,11 +214,10 @@ function toggleAlamatSekarang() {
 checkSame.addEventListener('change', toggleAlamatSekarang);
 toggleAlamatSekarang();
 
-// Panggil toggle lahir di sini (setelah semua inisialisasi selesai)
-// supaya state awal checkbox teraplikasikan dengan benar.
+// Panggil toggle lahir 
 toggleLahirLuarNegeri();
 
-// ── Validasi Email (real-time blur) ───────────────────────────────────────
+// Validasi Email (real-time blur) 
 const emailInput = document.getElementById('input-email');
 
 emailInput.addEventListener('blur', function () {
@@ -258,7 +225,7 @@ emailInput.addEventListener('blur', function () {
     this.classList.toggle('border-red-400', this.value && !ok);
 });
 
-// ── Validasi Angka (HP & Telepon) ─────────────────────────────────────────
+// Validasi Angka (HP & Telepon) 
 function setupNumericInput(inputId) {
     const el = document.getElementById(inputId);
     el.addEventListener('input', () => { el.value = el.value.replace(/[^0-9]/g, ''); });
@@ -267,7 +234,7 @@ function setupNumericInput(inputId) {
 setupNumericInput('input-hp');
 setupNumericInput('input-telepon');
 
-// ── Preview & Validasi Foto ────────────────────────────────────────────────
+// Preview & Validasi Foto 
 const inputFoto   = document.getElementById('input-foto');
 const fotoPreview = document.getElementById('foto-preview');
 const fotoWrapper = document.getElementById('foto-preview-wrapper');
@@ -293,7 +260,7 @@ inputFoto.addEventListener('change', function () {
     reader.readAsDataURL(file);
 });
 
-// ── Preview & Validasi Video ──────────────────────────────────────────────
+//  Preview & Validasi Video 
 const inputVideo   = document.getElementById('input-video');
 const videoPreview = document.getElementById('video-preview');
 const videoWrapper = document.getElementById('video-preview-wrapper');
@@ -315,7 +282,7 @@ inputVideo.addEventListener('change', function () {
     videoWrapper.classList.remove('hidden');
 });
 
-// ── Peta label field ramah pengguna ───────────────────────────────────────
+// Peta label field ramah pengguna 
 const FIELD_LABELS = {
     'nama_lengkap':           'Nama Lengkap',
     'jenis_kelamin':          'Jenis Kelamin',
@@ -357,11 +324,6 @@ function getFieldLabel(el) {
     return el.placeholder || el.name || el.id || 'Field tidak diketahui';
 }
 
-/**
- * Cek apakah elemen (dan semua ancestor-nya) terlihat.
- * Field dalam section yang disembunyikan (display:none / .hidden)
- * tidak perlu divalidasi meskipun punya atribut required.
- */
 function isFieldVisible(el) {
     if (el.disabled) return false;
     let node = el;
@@ -377,7 +339,7 @@ function isFieldVisible(el) {
     return true;
 }
 
-// ── Validasi menyeluruh saat submit ───────────────────────────────────────
+// Validasi menyeluruh saat submit 
 document.getElementById('form-pendaftaran').addEventListener('submit', function (e) {
     const errors  = [];
     const seen    = new Set(); // hindari duplikat label
@@ -386,7 +348,7 @@ document.getElementById('form-pendaftaran').addEventListener('submit', function 
         if (!seen.has(label)) { seen.add(label); errors.push(label); }
     };
 
-    // 1. Field [required] yang terlihat dan kosong
+    //  yang terlihat dan kosong
     this.querySelectorAll('[required]').forEach(el => {
         if (!isFieldVisible(el)) return;
 
@@ -402,7 +364,7 @@ document.getElementById('form-pendaftaran').addEventListener('submit', function 
         }
     });
 
-    // 2. Format email (isian ada tapi format salah)
+    // Format email (isian ada tapi format salah)
     const emailVal = emailInput.value.trim();
     const emailOk  = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailVal);
     if (emailVal && !emailOk) {
@@ -410,7 +372,7 @@ document.getElementById('form-pendaftaran').addEventListener('submit', function 
         emailInput.classList.add('border-red-400');
     }
 
-    // 3. Tampilkan semua error sekaligus, batalkan submit
+    // Tampilkan semua error sekaligus, batalkan submit
     if (errors.length > 0) {
         e.preventDefault();
 

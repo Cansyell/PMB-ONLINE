@@ -36,7 +36,7 @@ class DashboardController extends Controller
             return view('dashboard', compact('stats', 'pendaftarTerbaru'));
         }
 
-        // Mahasiswa — tidak butuh stats
+        // Mahasiswa 
         return view('dashboard');
     }
 }

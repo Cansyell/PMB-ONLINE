@@ -83,7 +83,7 @@ class UserController extends Controller
         $validated = $request->validate([
             'name'     => 'required|string|max:255',
             'email'    => ['required', 'email', Rule::unique('users')->ignore($id)],
-            'role'     => $user->id === auth()->id() ? 'nullable' : 'required|in:admin,mahasiswa', // ← ubah ini
+            'role'     => $user->id === auth()->id() ? 'nullable' : 'required|in:admin,mahasiswa', 
             'password' => 'nullable|string|min:8|confirmed',
         ], [
             'name.required'      => 'Nama wajib diisi.',
@@ -100,7 +100,7 @@ class UserController extends Controller
         }
 
         if ($user->id === auth()->id()) {
-            unset($validated['role']); // tetap dipertahankan sebagai safeguard
+            unset($validated['role']); 
         }
 
         $user->update($validated);

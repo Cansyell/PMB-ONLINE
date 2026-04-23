@@ -47,7 +47,7 @@ class Mahasiswa extends Model
         'lahir_luar_negeri' => 'boolean',
     ];
 
-    // ── Relasi ────────────────────────────────────────────────────────────
+    // Relasi
 
     public function user()
     {

@@ -413,7 +413,7 @@
         startCountdown();
     }, INTERVAL);
 
-    // Hentikan polling saat tab disembunyikan — hemat server
+    // Hentikan polling saat tab disembunyikan 
     document.addEventListener('visibilitychange', () => {
         if (document.hidden) {
             clearInterval(timer);

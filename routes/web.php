@@ -23,14 +23,14 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-// ── Wilayah API ────────────────────────────────────────────────────────────
+// Wilayah API 
 Route::prefix('api/wilayah')->name('api.wilayah.')->group(function () {
     Route::get('cities/{province_code}',   [WilayahController::class, 'cities'])->name('cities');
     Route::get('districts/{city_code}',    [WilayahController::class, 'districts'])->name('districts');
     Route::get('villages/{district_code}', [WilayahController::class, 'villages'])->name('villages');
 });
 
-// ── Admin ──────────────────────────────────────────────────────────────────
+//  Admin 
 Route::prefix('admin')->name('admin.')->middleware(['auth', 'role:admin'])->group(function () {
     Route::resource('pendaftaran', AdminPendaftaranController::class)
          ->only(['index', 'show', 'edit', 'update', 'destroy']);
@@ -44,7 +44,7 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'role:admin'])->grou
         ->name('monitoring.metrics');
 });
 
-// ── Mahasiswa ──────────────────────────────────────────────────────────────
+//  Mahasiswa 
 Route::prefix('mahasiswa')->name('mahasiswa.')->middleware(['auth', 'role:mahasiswa'])->group(function () {
     Route::get('pendaftaran',           [MahasiswaPendaftaranController::class, 'index'])->name('pendaftaran.index');
     Route::get('pendaftaran/create',    [MahasiswaPendaftaranController::class, 'create'])->name('pendaftaran.create');
